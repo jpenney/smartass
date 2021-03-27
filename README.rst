@@ -68,9 +68,12 @@ Installation
 
 ::
 
+..
     pip install smartass
-
-You can also install the in-development version with::
+..
+    You can also install the in-development version with::
+    
+You can install the in-development version with ::
 
     pip install https://github.com/jpenney/smartass/archive/master.zip
 
@@ -78,8 +81,10 @@ You can also install the in-development version with::
 Documentation
 =============
 
+..
+    https://smartass.readthedocs.io/
 
-https://smartass.readthedocs.io/
+TBD
 
 
 Development

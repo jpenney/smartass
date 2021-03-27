@@ -49,6 +49,7 @@ htmlcov
 .vscode
 *.iml
 *.komodoproject
+.settings/
 
 # Complexity
 output/*.html
