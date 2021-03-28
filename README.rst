@@ -19,19 +19,19 @@ Overview
     :target: https://smartass.readthedocs.io/
     :alt: Documentation Status
 
-.. |travis| image:: https://api.travis-ci.com/jpenney/smartass.svg?branch=master
+.. |travis| image:: https://api.travis-ci.com/jpenney/smartass.svg?branch=main
     :alt: Travis-CI Build Status
     :target: https://travis-ci.com/github/jpenney/smartass
 
-.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/jpenney/smartass?branch=master&svg=true
+.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/jpenney/smartass?branch=main&svg=true
     :alt: AppVeyor Build Status
     :target: https://ci.appveyor.com/project/jpenney/smartass
 
-.. |requires| image:: https://requires.io/github/jpenney/smartass/requirements.svg?branch=master
+.. |requires| image:: https://requires.io/github/jpenney/smartass/requirements.svg?branch=main
     :alt: Requirements Status
-    :target: https://requires.io/github/jpenney/smartass/requirements/?branch=master
+    :target: https://requires.io/github/jpenney/smartass/requirements/?branch=main
 
-.. |codecov| image:: https://codecov.io/gh/jpenney/smartass/branch/master/graphs/badge.svg?branch=master
+.. |codecov| image:: https://codecov.io/gh/jpenney/smartass/branch/main/graphs/badge.svg?branch=main
     :alt: Coverage Status
     :target: https://codecov.io/github/jpenney/smartass
 
@@ -53,7 +53,7 @@ Overview
 
 .. |commits-since| image:: https://img.shields.io/github/commits-since/jpenney/smartass/v0.1.0.svg
     :alt: Commits since latest release
-    :target: https://github.com/jpenney/smartass/compare/v0.1.0...master
+    :target: https://github.com/jpenney/smartass/compare/v0.1.0...main
 
 
 
@@ -66,26 +66,15 @@ Apply smart punctuation to subtitles.
 Installation
 ============
 
-::
-
-..
-    pip install smartass
-..
-    You can also install the in-development version with::
-    
 You can install the in-development version with ::
 
-    pip install https://github.com/jpenney/smartass/archive/master.zip
+    pip install -e git://github.com/jpenney/smartass.git#egg=smartass
 
 
 Documentation
 =============
 
-..
-    https://smartass.readthedocs.io/
-
-TBD
-
+    TDB
 
 Development
 ===========
