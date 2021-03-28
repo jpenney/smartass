@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+# pylint: disable=C0114
+
 import io
 import re
 from glob import glob
@@ -13,8 +15,8 @@ def read(*names, **kwargs):
     with io.open(
         join(dirname(__file__), *names),
         encoding=kwargs.get('encoding', 'utf8')
-    ) as fh:
-        return fh.read()
+    ) as reader:
+        return reader.read()
 
 
 setup(
@@ -31,7 +33,7 @@ setup(
         re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))
     ),
     author='Jason C. Penney',
-    author_email='jpenney@jczorkmid.net',
+    author_email='jpenney{at}jczorkmid{dot}net'.format(at='@', dot='.'),
     url='https://github.com/jpenney/smartass',
     packages=find_packages('src'),
     package_dir={'': 'src'},
@@ -73,7 +75,7 @@ setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'click',
+        'click >=7.1, <8.0',
         'smartypants',
         'ass',
         'chardet'
@@ -89,8 +91,8 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'smartass = smartass.cli:main',
-            'dumbass = smartass.cli:main'
+            'smartass = smartass.cli:smartass',
+            'dumbass = smartass.cli:dumbass'
         ]
     },
 )

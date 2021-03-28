@@ -1,5 +1,6 @@
 import fcntl
 import io
+import logging
 import os
 import shutil
 import tempfile
@@ -7,6 +8,8 @@ import time
 
 import ass
 import chardet
+
+LOGGER = logging.getLogger(__name__)
 
 
 class LockedIO():
@@ -100,7 +103,7 @@ def open_subfile(subfile):
     with io.open(subfile, encoding=encoding) as reader:
         document = ass.parse(reader)
         newline = next(
-            reversed(sorted(reader.newlines, key=len)),
+            reversed(sorted(reader.newlines or [], key=len)),
             None)
         return (document, encoding, newline)
 
@@ -135,3 +138,8 @@ def update_subfile(
         raise
     if not make_backup and os.path.exists(backup_path):
         os.unlink(backup_path)
+
+    if make_backup:
+        LOGGER.debug("updated '%s' (backup: '%s')", subfile, backup_path)
+    else:
+        LOGGER.debug("updated '%s'", subfile)

@@ -66,15 +66,57 @@ Apply smart punctuation to subtitles.
 Installation
 ============
 
-You can install the in-development version with ::
+You can install the in-development version with:
 
-    pip install -e git://github.com/jpenney/smartass.git#egg=smartass
+.. code-block:: console
+
+    $ pip install -e git://github.com/jpenney/smartass.git#egg=smartass
 
 
 Documentation
 =============
 
-    TDB
+    https://smartass.readthedocs.io/
+
+Command Line Usage
+==================
+
+Smarten punctuation:
+
+.. code-block:: console
+
+    $ smartass --skip-actor sign subs1.ass
+
+Unsmarted punctuation:
+
+.. code-block:: console
+
+    $ dumbass subs2.ass
+
+See usage:
+
+.. code-block:: console
+
+    $ smartass --help
+    Usage: smartass [OPTIONS] FILE
+
+      Smarten punctionation on ass subtitle files.
+
+    Options:
+      --log-level [debug|info|warning|error|critical]
+                                      log level displayed  [default: info]
+      --no-backup / --backup          enable/disable creation of backup files
+                                      [default: True]
+
+      --process-comments / --no-process-comments
+                                      enable/disable processing of comment events
+                                      [default: False]
+
+      --skip-name ACTOR_NAME          lines by this actor (case insensitive) will
+                                      be skipped. May be passed multiple times.
+
+      --version                       Show the version and exit.
+      --help                          Show this message and exit.
 
 Development
 ===========

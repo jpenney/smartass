@@ -13,6 +13,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
+    'sphinxcontrib.email'
 ]
 source_suffix = '.rst'
 master_doc = 'index'
@@ -38,10 +39,12 @@ html_use_smartypants = True
 html_last_updated_fmt = '%b %d, %Y'
 html_split_index = False
 html_sidebars = {
-   '**': ['searchbox.html', 'globaltoc.html', 'sourcelink.html'],
+    '**': ['searchbox.html', 'globaltoc.html', 'sourcelink.html'],
 }
 html_short_title = '%s-%s' % (project, version)
 
 napoleon_use_ivar = True
 napoleon_use_rtype = False
 napoleon_use_param = False
+
+email_automode = True
