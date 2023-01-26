@@ -14,7 +14,7 @@ from setuptools import find_packages, setup
 def read(*names, **kwargs):
     with io.open(
         join(dirname(__file__), *names),
-        encoding=kwargs.get('encoding', 'utf8')
+        encoding=kwargs.get('encoding', 'utf8'),
     ) as reader:
         return reader.read()
 
@@ -24,13 +24,12 @@ setup(
     version='0.1.0',
     license='BSD-3-Clause',
     description='Apply smart punctuation to subtitles.',
-    long_description='%s\n%s' % (
-        re.compile(
-            '^.. start-badges.*^.. end-badges',
-            re.M | re.S).sub(
-            '',
-            read('README.rst')),
-        re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))
+    long_description='%s\n%s'
+    % (
+        re.compile('^.. start-badges.*^.. end-badges', re.M | re.S).sub(
+            '', read('README.rst')
+        ),
+        re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst')),
     ),
     author='Jason C. Penney',
     author_email='jpenney{at}jczorkmid{dot}net'.format(at='@', dot='.'),
@@ -66,8 +65,7 @@ setup(
     ],
     project_urls={
         'Documentation': 'https://smartass.readthedocs.io/',
-        'Changelog':
-            'https://smartass.readthedocs.io/en/latest/changelog.html',
+        'Changelog': 'https://smartass.readthedocs.io/en/latest/changelog.html',
         'Issue Tracker': 'https://github.com/jpenney/smartass/issues',
     },
     keywords=[
@@ -92,7 +90,7 @@ setup(
     entry_points={
         'console_scripts': [
             'smartass = smartass.cli:smartass',
-            'dumbass = smartass.cli:dumbass'
+            'dumbass = smartass.cli:dumbass',
         ]
     },
 )

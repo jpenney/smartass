@@ -9,8 +9,7 @@ LOGGER = logging.getLogger(__name__)
 # pylint: disable=R0903
 
 
-class ClickStream():
-
+class ClickStream:
     def __init__(self, err=True):
         self._err = err
 
@@ -25,23 +24,30 @@ class ClickFormatter(logging.Formatter):
         'exception': dict(fg='magenta'),
         'critical': dict(fg='magenta', bold=True),
         'debug': dict(dim=True, fg='blue'),
-        'warning': dict(fg='yellow')
+        'warning': dict(fg='yellow'),
     }
 
     _LEVEL_NAME_FMT = '%%%ds' % max(
-        len(logging.getLevelName(i)) for i in range(0, 60, 10))
+        len(logging.getLevelName(i)) for i in range(0, 60, 10)
+    )
 
     def __init__(  # pylint: disable=R0913
-            self, fmt=None, datefmt=None, style='%',
-            show_level_threshold=logging.ERROR,
-            show_level_fmt=None, **kwargs):
+        self,
+        fmt=None,
+        datefmt=None,
+        style='%',
+        show_level_threshold=logging.ERROR,
+        show_level_fmt=None,
+        **kwargs
+    ):
         self._show_level_threshhold = show_level_threshold
         super().__init__(fmt, datefmt, style, **kwargs)  # noqa
         self._show_level_style = self._default_style = self._style
         if show_level_fmt:
             self._show_level_style = type(self._style)(show_level_fmt)
             if kwargs.get('validate', False) and hasattr(
-                    self._show_level_style, 'validate'):
+                self._show_level_style, 'validate'
+            ):
                 self._show_level_style.validate()
 
     def formatMessage(self, record):
@@ -50,22 +56,26 @@ class ClickFormatter(logging.Formatter):
         level_style['bold'] = True
         new_record = logging.makeLogRecord(record.__dict__)
         new_record.levelname = click.style(
-            self._LEVEL_NAME_FMT % new_record.levelname.upper(), **level_style)
-        new_record.message = click.style(
-            new_record.message, **base_style)
+            self._LEVEL_NAME_FMT % new_record.levelname.upper(), **level_style
+        )
+        new_record.message = click.style(new_record.message, **base_style)
 
         active_style = self._default_style
         if record.levelno >= self._show_level_threshhold:
             active_style = self._show_level_style
 
-        (self._style, self._fmt) = (active_style,
-                                    getattr(active_style, '_fmt', None))
-        return click.unstyle(
-            '') + super().formatMessage(new_record) + click.unstyle('')
+        (self._style, self._fmt) = (
+            active_style,
+            getattr(active_style, '_fmt', None),
+        )
+        return (
+            click.unstyle('')
+            + super().formatMessage(new_record)
+            + click.unstyle('')
+        )
 
 
-class ClickContextObj():
-
+class ClickContextObj:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._log_level = logging.WARNING
@@ -73,9 +83,10 @@ class ClickContextObj():
 
     def _config_handler(self):
         fmt_args = dict(
-            fmt="%(message)s",
-            show_level_fmt="%(levelname)s: %(message)s",
-            show_level_threshold=logging.ERROR)
+            fmt='%(message)s',
+            show_level_fmt='%(levelname)s: %(message)s',
+            show_level_threshold=logging.ERROR,
+        )
 
         if self.log_level <= logging.DEBUG:
             fmt_args['show_level_threshold'] = self.log_level

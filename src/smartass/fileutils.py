@@ -12,8 +12,7 @@ import chardet
 LOGGER = logging.getLogger(__name__)
 
 
-class LockedIO():
-
+class LockedIO:
     def __init__(self, filename, mode='r', **kwargs):
         kwargs['mode'] = mode
         self._filename = filename
@@ -41,7 +40,6 @@ class LockedIO():
 
 
 class AtomicWriter(LockedIO):
-
     def __init__(self, filename, mode='wb', **kwargs):
         super().__init__(filename, mode, **kwargs)
         self._atomicobj = None
@@ -50,10 +48,13 @@ class AtomicWriter(LockedIO):
 
         super().__enter__()
         atomicargs = dict(self._kwargs.items())
-        atomicargs.update(dict(
-            prefix=os.path.basename(self._filename),
-            dir=os.path.dirname(self._filename),
-            delete=False))
+        atomicargs.update(
+            dict(
+                prefix=os.path.basename(self._filename),
+                dir=os.path.dirname(self._filename),
+                delete=False,
+            )
+        )
         tmp = self._atomicobj = tempfile.NamedTemporaryFile(**atomicargs)
         self._fileobj.seek(0)
         try:
@@ -86,7 +87,8 @@ def detect_file_encoding(filename):
         chunk = buffer = inp.read(4096)
         result = chardet.detect(buffer)
         while chunk and (
-                result['confidence'] < 0.9 or result['encoding'] == 'ascii'):
+            result['confidence'] < 0.9 or result['encoding'] == 'ascii'
+        ):
             chunk = inp.read(1024)
             buffer += chunk
             result = chardet.detect(buffer)
@@ -102,9 +104,7 @@ def open_subfile(subfile):
 
     with io.open(subfile, encoding=encoding) as reader:
         document = ass.parse(reader)
-        newline = next(
-            reversed(sorted(reader.newlines or [], key=len)),
-            None)
+        newline = next(reversed(sorted(reader.newlines or [], key=len)), None)
         return (document, encoding, newline)
 
 
@@ -121,15 +121,16 @@ def get_backup_path(pth, key):
 
 
 def update_subfile(
-        subfile, subdoc, encoding='utf-8-sig', newline=None, make_backup=True):
+    subfile, subdoc, encoding='utf-8-sig', newline=None, make_backup=True
+):
 
     backup_path = get_backup_path(subfile, 'smartass_backup')
     shutil.copy2(subfile, backup_path)
 
     try:
         with AtomicWriter(
-                subfile, mode='a+', encoding=encoding,
-                newline=newline) as newdata:
+            subfile, mode='a+', encoding=encoding, newline=newline
+        ) as newdata:
             newdata.seek(0)
             newdata.truncate()
             subdoc.dump_file(newdata)

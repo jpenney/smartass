@@ -9,17 +9,20 @@ __all__ = ['SmartProcessor', 'DumbProcessor']
 
 class Processor(metaclass=ABCMeta):
 
-    _DUMB_MAPPING = str.maketrans({
-        '\u201c': '"',
-        '\u201d': '"',
-        '\u2014': '--',
-        '\u2026': '...',
-        '\u2018': "'",
-        '\u2019': "'"})
+    _DUMB_MAPPING = str.maketrans(
+        {
+            '\u201c': '"',
+            '\u201d': '"',
+            '\u2014': '--',
+            '\u2026': '...',
+            '\u2018': "'",
+            '\u2019': "'",
+        }
+    )
 
     def __init__(
-            self, make_backups=True, process_comments=False,
-            names_to_skip=None):
+        self, make_backups=True, process_comments=False, names_to_skip=None
+    ):
         self._make_backups = make_backups
 
         supported_events = set([Dialogue])
@@ -49,8 +52,11 @@ class Processor(metaclass=ABCMeta):
         if not isinstance(event, self._supported_events):
             return False
 
-        if (event.name and self._names_to_skip and
-                event.name.lower() in self._names_to_skip):
+        if (
+            event.name
+            and self._names_to_skip
+            and event.name.lower() in self._names_to_skip
+        ):
             return False
 
         return True
@@ -82,12 +88,10 @@ class Processor(metaclass=ABCMeta):
 
 
 class SmartProcessor(Processor):
-
     def _process_text(self, line):
         return self._smarten(self._dumben(line))
 
 
 class DumbProcessor(Processor):
-
     def _process_text(self, line):
         return self._dumben(line)
