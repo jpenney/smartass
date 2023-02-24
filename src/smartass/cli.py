@@ -50,7 +50,7 @@ def _common_cli(func):
         help='log level displayed',
     )
     @click.option(
-        '--no-backup/--backup',
+        '--backup/--no-backup',
         default=True,
         show_default=True,
         help='enable/disable creation of backup files',
@@ -67,8 +67,18 @@ def _common_cli(func):
         default=[],
         metavar='ACTOR_NAME',
         help=(
-            'lines by this actor (case insensitive) will be skipped. '
-            'May be passed multiple times.'
+            'lines by this actor (case insensitive, uses filename globbing) '
+            'will be skipped. May be passed multiple times.'
+        ),
+    )
+    @click.option(
+        '--skip-style',
+        multiple=True,
+        default=[],
+        metavar='STYLE_NAME',
+        help=(
+            'lines in this style (case insensitive, uses filename globbing) '
+            'will be skipped. May be passed multiple times.'
         ),
     )
     @click.version_option(
@@ -94,10 +104,19 @@ def _common_cli(func):
     return wrapper
 
 
-def _run_cli(processor_factory, backup, process_comments, skip_name, subfiles):
+def _run_cli(
+    processor_factory,
+    backup,
+    process_comments,
+    skip_name,
+    skip_style,
+    subfiles,
+):
 
     processor_args = dict(
-        process_comments=process_comments, names_to_skip=skip_name
+        process_comments=process_comments,
+        names_to_skip=skip_name,
+        styles_to_skip=skip_style,
     )
     processor = processor_factory(**processor_args)
 
@@ -109,7 +128,7 @@ def _run_cli(processor_factory, backup, process_comments, skip_name, subfiles):
                 total_events,
                 events_processed,
                 events_updated,
-            ) = processor.process_document(subdoc)
+            ) = processor.process_document(subdoc, subfile)
             LOGGER.info(
                 '%s: events=%d, processed=%d, updated=%d',
                 subfile,

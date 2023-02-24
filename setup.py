@@ -21,7 +21,7 @@ def read(*names, **kwargs):
 
 setup(
     name='smartass',
-    version='0.1.0',
+    version='0.8.0',
     license='BSD-3-Clause',
     description='Apply smart punctuation to subtitles.',
     long_description='%s\n%s'
@@ -73,7 +73,7 @@ setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'click >=7.1, <8.0',
+        'click >=7.1, <9.0',
         'smartypants',
         'ass',
         'chardet'

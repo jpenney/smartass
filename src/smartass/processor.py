@@ -1,27 +1,24 @@
+import logging
+import re
 from abc import ABCMeta, abstractmethod
-from html import unescape
+from fnmatch import fnmatch
 
 from ass import Comment, Dialogue, Document
-from smartypants import smartypants
+
+from .helpers import dumben_subtitle_text, smarten_subtitle_text
+
+LOGGER = logging.getLogger(__name__)
 
 __all__ = ['SmartProcessor', 'DumbProcessor']
 
 
 class Processor(metaclass=ABCMeta):
-
-    _DUMB_MAPPING = str.maketrans(
-        {
-            '\u201c': '"',
-            '\u201d': '"',
-            '\u2014': '--',
-            '\u2026': '...',
-            '\u2018': "'",
-            '\u2019': "'",
-        }
-    )
-
     def __init__(
-        self, make_backups=True, process_comments=False, names_to_skip=None
+        self,
+        make_backups=True,
+        process_comments=False,
+        names_to_skip=None,
+        styles_to_skip=None,
     ):
         self._make_backups = make_backups
 
@@ -31,18 +28,27 @@ class Processor(metaclass=ABCMeta):
 
         self._supported_events = tuple(e for e in supported_events)
         self._names_to_skip = set([])
+        self._styles_to_skip = set([])
+        self._current_subfile = None
+
         if names_to_skip:
-            self._names_to_skip = set(n.lower() for n in names_to_skip)
+            self._names_to_skip = set(names_to_skip)
+        if styles_to_skip:
+            self._styles_to_skip = set(styles_to_skip)
+
+    @property
+    def current_subfile(self):
+        return self._current_subfile
 
     @property
     def make_backups(self):
         return self._make_backups
 
     def _smarten(self, line):  # pylint: disable=R0201
-        return unescape(smartypants(line))
+        return smarten_subtitle_text(line)
 
     def _dumben(self, line):
-        return line.translate(self._DUMB_MAPPING)
+        return dumben_subtitle_text(line)
 
     @abstractmethod
     def _process_text(self, line):
@@ -52,12 +58,17 @@ class Processor(metaclass=ABCMeta):
         if not isinstance(event, self._supported_events):
             return False
 
-        if (
-            event.name
-            and self._names_to_skip
-            and event.name.lower() in self._names_to_skip
-        ):
-            return False
+        if event.name:
+            for skip_pattern in self._names_to_skip:
+                LOGGER.info('comparing %s <=> %s', event.name, skip_pattern)
+                if fnmatch(event.name, skip_pattern):
+                    return False
+
+        if event.style:
+            for skip_pattern in self._styles_to_skip:
+                LOGGER.info('comparing %s <=> %s', event.style, skip_pattern)
+                if fnmatch(event.style, skip_pattern):
+                    return False
 
         return True
 
@@ -70,21 +81,27 @@ class Processor(metaclass=ABCMeta):
         event.text = new_text
         return True
 
-    def process_document(self, document):
+    def process_document(self, document, subfile=None):
         if not isinstance(document, Document):
             raise TypeError("'document' (%r) unsupported")
         total_events = 0
         events_processed = 0
         events_updated = 0
-
-        for event in document.events:
-            total_events += 1
-            if self.event_supported(event):
-                events_processed += 1
-                if self._process_event(event):
-                    events_updated += 1
+        self._current_subfile = subfile
+        try:
+            for event in document.events:
+                total_events += 1
+                if self.event_supported(event):
+                    events_processed += 1
+                    if self._process_event(event):
+                        events_updated += 1
+        finally:
+            self._current_subfile = None
 
         return (total_events, events_processed, events_updated)
+
+    def process_text(self, text):
+        return self._process_text(text)
 
 
 class SmartProcessor(Processor):
