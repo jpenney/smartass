@@ -51,7 +51,7 @@ Overview
     :alt: Supported implementations
     :target: https://pypi.org/project/smartass
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/jpenney/smartass/v0.1.0.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/jpenney/smartass/v0.8.0.svg
     :alt: Commits since latest release
     :target: https://github.com/jpenney/smartass/compare/v0.1.0...main
 
